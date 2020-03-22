@@ -14,7 +14,7 @@ class LinearClassifier(object):
         self.W = None
 
     def train(self, X, y, learning_rate=1e-3, reg=1e-5, num_iters=100,
-              batch_size=200, verbose=False):
+              batch_size=200, verbose=False, weights_return=False):
         """
         Обучение линейного классификатора с помощью стохастического градиентного спуска.
 
@@ -33,7 +33,7 @@ class LinearClassifier(object):
         Список, содержащий значение функции потерь на каждой итерации обучения.
         """
         num_train, dim = X.shape
-        print(X.shape)
+        # print(X.shape)
         num_classes = np.max(y) + 1 # предположим, y принимает значения 0...K-1 где K - число классов
         if self.W is None:
             # инициализируем веса
@@ -57,9 +57,7 @@ class LinearClassifier(object):
             # *****START OF YOUR CODE*****
 
             X_b = np.split(X, batch_size)
-            # print(len(X_b), len(X_b[0]))
             y_b = np.split(y, batch_size)
-            # print(len(y_b), len(y_b[0]))
             batch_num = np.random.choice([x for x in range(batch_size)])
             # print(batch_num)
             X_batch = X_b[batch_num]
@@ -85,10 +83,19 @@ class LinearClassifier(object):
 
             # *****END OF YOUR CODE*****
 
-            if verbose and it % 100 == 0:
+            if verbose and it % 10 == 0:
                 print('Итерация %d из %d: потери - %f' % (it, num_iters, loss))
+        
+        # print(loss_history)
+        ret = np.dot(X, self.W)
+        clasess = np.argmax(ret, axis=1)
+        # print(clasess.shape, clasess[:100])
+        y_pred = clasess
 
-        return loss_history
+        if weights_return == True:
+            return loss_history, y_pred, self.W
+        return loss_history, y_pred
+
 
     def predict(self, X):
         """
@@ -109,7 +116,16 @@ class LinearClassifier(object):
         ###########################################################################
         # *****START OF YOUR CODE*****
 
+        # _, two = self.loss(X_batch, y_batch, reg)
+        # print(X.shape)
+        ret = np.dot(X, self.W)
+        # print(ret.shape)
+        clasess = np.argmax(ret, axis=1)
+        # print(clasess.shape, clasess[:100])
+        y_pred = clasess
+
         pass
+
 
         # *****END OF YOUR CODE*****
         return y_pred
@@ -133,6 +149,15 @@ class LinearClassifier(object):
         return svm_loss_naive(self.W, X_batch, y_batch, reg)
         pass
 
+    def best_svm(self, W, X):
+        y_pred = np.zeros(X.shape[0])
+
+        ret = np.dot(X, W)
+        # print(ret.shape)
+        clasess = np.argmax(ret, axis=1)
+        # print(clasess.shape, clasess[:100])
+        y_pred = clasess
+        return y_pred
 
 class LinearSVM(LinearClassifier):
     """ Подкласс, использующий функцию потерь мультиклассового SVM """

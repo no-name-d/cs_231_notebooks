@@ -29,8 +29,8 @@ def svm_loss_naive(W, X, y, reg):
     loss = 0.0
     for i in range(num_train):
         scores = X[i].dot(W)
-        if i == 1:
-            print(scores.shape)
+        # if i == 1:
+            # print(scores.shape)
         correct_class_score = scores[y[i]]
         # print(correct_class_score)
         for j in range(num_classes):
@@ -47,7 +47,7 @@ def svm_loss_naive(W, X, y, reg):
 
     # Сейчас потери - это сумма по всем обучающим примерам, но мы хотим, чтобы они были
     # усреднённым значением, поэтому делим их на число примеров num_train.
-    print(loss)
+    # print(loss)
     loss /= num_train
     dW /= num_train
 
@@ -64,7 +64,7 @@ def svm_loss_naive(W, X, y, reg):
     #############################################################################
     # *****START OF YOUR CODE*****
 
-    print(dW.shape, num_classes, num_train)
+    # print(dW.shape, num_classes, num_train)
 
     # print(dW[0:100, :])
     # dW = np.sum(dW)
@@ -95,7 +95,7 @@ def svm_loss_vectorized(W, X, y, reg):
 
     delta = 1.0
     scores_matrix = X.dot(W)
-    print(scores_matrix.shape)
+    # print(scores_matrix.shape)
     yi_scores = scores_matrix[np.arange(scores_matrix.shape[0]),y]
     margins = np.maximum(0, scores_matrix - np.matrix(yi_scores).T + delta)
     margins[np.arange(num_train),y] = 0  # Обнуляем оценку для совпадающих классов
